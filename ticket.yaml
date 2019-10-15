@@ -1,0 +1,17 @@
+user-id: 35
+servers:
+  35.193.67.115:
+    db-type: SQLServer
+    uid: sa
+    pw: TestPassword123
+    db: test
+    schema: users
+    table: user_info
+    columns: "*"
+    clauses: WHERE user_id=35
+  cloud-dataproc:
+    db-type: Hive
+    schema: users
+    table: user_info
+    columns: "*"
+    clauses: WHERE id=35
