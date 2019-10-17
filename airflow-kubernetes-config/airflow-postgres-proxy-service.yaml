@@ -6,7 +6,7 @@ metadata:
     run: airflow-postgres-proxy
   name: airflow-postgres-proxy-service
   namespace: default
-  resourceVersion: "1179"
+  resourceVersion: "1180"
   selfLink: /api/v1/namespaces/default/services/airflow-postgres-proxy-service
   uid: b495a324-f03e-11e9-b753-42010a8000a5
 spec:
