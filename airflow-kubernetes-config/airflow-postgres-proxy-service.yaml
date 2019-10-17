@@ -10,7 +10,6 @@ metadata:
   selfLink: /api/v1/namespaces/default/services/airflow-postgres-proxy-service
   uid: b495a324-f03e-11e9-b753-42010a8000a5
 spec:
-  clusterIP: 10.39.248.36
   ports:
     - port: 3307
       protocol: TCP
