@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "1"
+  creationTimestamp: "2019-10-16T17:59:31Z"
+  generation: 1
+  labels:
+    run: airflow-postgres-proxy
+  name: airflow-postgres-proxy
+  namespace: default
+  resourceVersion: "285116"
+  selfLink: /apis/apps/v1/namespaces/default/deployments/airflow-postgres-proxy
+  uid: b47a4fae-f03e-11e9-b753-42010a8000a5
+spec:
+  progressDeadlineSeconds: 2147483647
+  replicas: 1
+  revisionHistoryLimit: 2147483647
+  selector:
+    matchLabels:
+      run: airflow-postgres-proxy
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        run: airflow-postgres-proxy
+    spec:
+      containers:
+        - command:
+            - /cloud_sql_proxy
+            - -instances=labs-sbx:us-central1:sequoia-airflow=tcp:0.0.0.0:3307
+          image: us.gcr.io/cloudsql-docker/gce-proxy:1.13
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - if ! command -v mysql; then apk update && apk add mysql-client; fi &&
+                  mysql --connect-timeout=5 -uroot -h127.0.0.1 -e '\q'
+            failureThreshold: 3
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: airflow-postgres-proxy
+          ports:
+            - containerPort: 3306
+              protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+            - mountPath: /etc/ssl/certs
+              name: ssl-certs
+      dnsPolicy: ClusterFirst
+      nodeSelector:
+        cloud.google.com/gke-nodepool: default-pool
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+        - hostPath:
+            path: /etc/ssl/certs
+            type: ""
+          name: ssl-certs
+status:
+  availableReplicas: 1
+  conditions:
+    - lastTransitionTime: "2019-10-16T17:59:31Z"
+      lastUpdateTime: "2019-10-16T17:59:31Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+  observedGeneration: 1
+  readyReplicas: 1
+  replicas: 1
+  updatedReplicas: 1
