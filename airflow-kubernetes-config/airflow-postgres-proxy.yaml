@@ -34,19 +34,8 @@ spec:
         - command:
             - /cloud_sql_proxy
             - -instances=labs-sbx:us-central1:sequoia-airflow=tcp:0.0.0.0:3307
-          image: us.gcr.io/cloudsql-docker/gce-proxy:1.13
-          imagePullPolicy: IfNotPresent
-          livenessProbe:
-            exec:
-              command:
-                - /bin/sh
-                - -c
-                - if ! command -v mysql; then apk update && apk add mysql-client; fi &&
-                  mysql --connect-timeout=5 -uroot -h127.0.0.1 -e '\q'
-            failureThreshold: 3
-            periodSeconds: 10
-            successThreshold: 1
-            timeoutSeconds: 1
+          image: b.gcr.io/cloudsql-docker/gce-proxy:latest
+          imagePullPolicy: Always
           name: airflow-postgres-proxy
           ports:
             - containerPort: 3306
